@@ -17,7 +17,7 @@ Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çal�
 | Görsel kimlik | `templates/*.html`, `static/img/` | Logo paketi, Deniz Mavisi `#0E5E7B`, Gün Batımı Turuncusu `#F2994A`, Kum Beji `#F5EFE6`, Poppins / Lora |
 | KVKK | Karşılama formu | 6698 sayılı KVKK aydınlatma notu |
 
-**Teknolojiler:** Python · Flask · SQLite · Groq (llama-3.1-8b-instant) · Wix Velo · Render
+**Teknolojiler:** Python · Flask · SQLite · Groq (qwen/qwen3.8-27b) · Wix Velo · Render
 
 ## Mimari (Separation of Concerns)
 

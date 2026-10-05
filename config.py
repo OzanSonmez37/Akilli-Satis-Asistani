@@ -24,7 +24,7 @@ class Config:
     # Yapay zekâ sağlayıcısı ayarları
     GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
     AI_PROVIDER = os.environ.get('AI_PROVIDER', 'groq')
-    AI_MODEL = os.environ.get('AI_MODEL', 'llama-3.1-8b-instant')
+    AI_MODEL = os.environ.get('AI_MODEL', 'qwen/qwen3.8-27b')
     AI_TIMEOUT = int(os.environ.get('AI_TIMEOUT', '20'))
 
     # CORS: Wix sitesinin backend'e erişebilmesi için izinli kökenler (virgülle ayrılır)

@@ -6,6 +6,8 @@ Bu dosya Flask, HTTP rotaları veya veritabanı hakkında hiçbir şey bilmez;
 ayarları doğrudan config.py'den okur. Sağlayıcı değiştirmek için yalnızca
 burası güncellenir.
 """
+import re
+
 import requests
 
 from config import Config
@@ -66,7 +68,12 @@ class AIService:
             )
             yanit.raise_for_status()
             veri = yanit.json()
-            return veri['choices'][0]['message']['content'].strip()
+            metin = veri['choices'][0]['message']['content'] or ''
+            # Bazı modeller düşünme adımlarını <think> etiketiyle döndürür; ziyaretçiye gösterme
+            metin = re.sub(r'<think>.*?</think>', '', metin, flags=re.DOTALL).strip()
+            if not metin:
+                raise AIServiceError('Yapay zekâdan boş yanıt geldi.')
+            return metin
         except requests.exceptions.RequestException as hata:
             raise AIServiceError(f'Yapay zekâ servisine ulaşılamadı: {hata}') from hata
         except (KeyError, IndexError, ValueError) as hata:
