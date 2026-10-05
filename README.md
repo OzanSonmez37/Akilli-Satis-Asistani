@@ -1,6 +1,6 @@
 # Sönmez Turizm — Akıllı Satış Asistanı (SmartLead AI)
 
-**Marka yöneticisi:** Ozan Sönmez · **Web sitesi:** <https://sonmezturizm.wixsite.com/sonmezturizm>
+**Marka yöneticisi:** Ozan Sönmez · **Web sitesi:** <https://sonmezturizm.wixsite.com/sonmezturizm> · **Canlı backend:** <https://sonmez-turizm.onrender.com>
 
 Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çalışan, ziyaretçilerle yapay zekâ üzerinden sohbet eden ("Sönmez Asistan") ve tur, tatil ya da kurumsal organizasyonla ilgilenenlerin iletişim bilgilerini (lead) toplayan bir satış asistanı.
 

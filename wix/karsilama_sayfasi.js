@@ -9,7 +9,7 @@
 import { fetch } from 'wix-fetch';
 
 // Render'daki backend adresiniz (sonunda / olmadan)
-const API_URL = 'https://SIZIN-SERVISINIZ.onrender.com';
+const API_URL = 'https://sonmez-turizm.onrender.com';
 
 // Yapay zekânın konuşmayı hatırlaması için geçmiş
 const gecmis = [];

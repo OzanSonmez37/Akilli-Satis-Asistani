@@ -6,7 +6,7 @@
 
 import { fetch } from 'wix-fetch';
 
-const API_URL = 'https://SIZIN-SERVISINIZ.onrender.com';
+const API_URL = 'https://sonmez-turizm.onrender.com';
 
 $w.onReady(function () {
     // Repeater'daki her satır için $item ile o satırın bileşenlerine eriş
