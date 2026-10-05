@@ -1,1 +1,1 @@
-# Ak-ll--Sat--Asistan-
+# Akıllı-Satış-Asistanı
