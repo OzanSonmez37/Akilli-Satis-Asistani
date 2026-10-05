@@ -4,44 +4,52 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ marka }} — Akıllı Satış Asistanı</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/ikon.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <style>
-    /* Marka renkleri tek yerde: kendi işinize göre değiştirin */
+    /* Sönmez Turizm marka renkleri (Proje Başlatma Belgesi, Bölüm III) */
     :root {
-      --ana: #7c3aed;
-      --ana-koyu: #5b21b6;
-      --vurgu: #f472b6;
-      --metin: #1f1235;
-      --soluk: #6b6280;
-      --cam: rgba(255, 255, 255, 0.55);
-      --cam-kenar: rgba(255, 255, 255, 0.7);
+      --mavi: #0E5E7B;          /* Deniz Mavisi — güven, keşif, huzur */
+      --mavi-koyu: #0A4A61;
+      --turuncu: #F2994A;       /* Gün Batımı Turuncusu — sıcaklık, enerji */
+      --bej: #F5EFE6;           /* Kum Beji — sadelik, doğallık */
+      --metin: #12313d;
+      --soluk: #5b6b71;
+      --cam: rgba(255, 255, 255, 0.5);
+      --cam-kenar: rgba(255, 255, 255, 0.75);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-family: "Lora", Georgia, serif;   /* gövde metinleri: Lora */
       color: var(--metin);
       min-height: 100vh;
       background:
-        radial-gradient(circle at 15% 20%, #f5d0fe 0, transparent 40%),
-        radial-gradient(circle at 85% 30%, #c4b5fd 0, transparent 45%),
-        radial-gradient(circle at 50% 90%, #fbcfe8 0, transparent 40%),
-        #faf5ff;
+        radial-gradient(circle at 85% 15%, rgba(242,153,74,.35) 0, transparent 40%),
+        radial-gradient(circle at 10% 70%, rgba(14,94,123,.22) 0, transparent 45%),
+        var(--bej);
     }
+    h1, h2, button, nav, .rozet, .sohbet-baslik, input, select, textarea { font-family: "Poppins", system-ui, sans-serif; }
     .kapsayici { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
 
-    /* Z-Pattern 1. çizgi: logo sol üst → menü sağ üst */
-    header { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; }
-    .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
-    .logo span { color: var(--ana); }
-    nav a { color: var(--soluk); text-decoration: none; margin-left: 20px; font-weight: 500; }
-    nav a:hover { color: var(--ana); }
+    /* Z-Pattern 1. çizgi: logo sol üst → iletişim/menü sağ üst */
+    header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; gap: 16px; }
+    .logo img { height: 56px; display: block; }
+    nav { display: flex; align-items: center; gap: 20px; font-weight: 500; }
+    nav a { color: var(--mavi); text-decoration: none; }
+    nav a:hover { color: var(--turuncu); }
+    nav .tel { background: var(--mavi); color: #fff; padding: 8px 16px; border-radius: 999px; white-space: nowrap; }
+    nav .tel:hover { background: var(--mavi-koyu); color: #fff; }
 
     /* Z-Pattern çapraz: tanıtım solda → sohbet sağda */
     .hero { display: grid; grid-template-columns: 1fr 1.1fr; gap: 40px; align-items: center; padding: 32px 0 48px; }
-    .hero h1 { font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1.1; margin: 0 0 16px; letter-spacing: -0.03em; }
-    .hero p { color: var(--soluk); font-size: 1.1rem; line-height: 1.6; margin: 0 0 24px; }
+    .ust-baslik { color: var(--turuncu); font-family: "Poppins", sans-serif; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; font-size: .85rem; }
+    .hero h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; margin: 8px 0 16px; color: var(--mavi); letter-spacing: -0.02em; }
+    .hero p { color: var(--soluk); font-size: 1.1rem; line-height: 1.7; margin: 0 0 24px; }
     .rozetler { display: flex; flex-wrap: wrap; gap: 10px; }
-    .rozet { background: #fff; border-radius: 999px; padding: 8px 14px; font-size: .9rem; box-shadow: 0 2px 8px rgba(124,58,237,.1); }
+    .rozet { background: #fff; border-radius: 999px; padding: 8px 14px; font-size: .85rem; color: var(--mavi); box-shadow: 0 2px 10px rgba(14,94,123,.1); }
 
     /* Glassmorphism (buzlu cam) sohbet kartı */
     .cam-kart {
@@ -50,85 +58,99 @@
       border-radius: 24px;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 20px 50px rgba(91, 33, 182, 0.15);
+      box-shadow: 0 20px 50px rgba(14, 94, 123, 0.18);
       padding: 20px;
     }
-    .sohbet-baslik { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 700; }
-    .nokta { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; }
+    .sohbet-baslik { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 600; color: var(--mavi); }
+    .sohbet-baslik img { width: 32px; height: 32px; }
+    .sohbet-baslik small { display: block; font-weight: 400; color: var(--soluk); font-size: .78rem; }
     #yanitAlani {
       height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
       padding: 4px; margin-bottom: 12px;
     }
-    .balon { max-width: 85%; padding: 10px 14px; border-radius: 16px; line-height: 1.45; white-space: pre-wrap; }
+    .balon { max-width: 85%; padding: 10px 14px; border-radius: 16px; line-height: 1.5; white-space: pre-wrap; }
     .balon.asistan { background: #fff; align-self: flex-start; border-bottom-left-radius: 4px; }
-    .balon.kullanici { background: var(--ana); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
-    .balon.hata { background: #fee2e2; color: #991b1b; align-self: flex-start; }
+    .balon.kullanici { background: var(--mavi); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .balon.hata { background: #fde8e8; color: #9b1c1c; align-self: flex-start; }
     .giris-satiri { display: flex; gap: 8px; }
 
     input, textarea, select {
-      font: inherit; color: var(--metin);
+      font-size: .95rem; color: var(--metin);
       width: 100%; padding: 12px 14px; border-radius: 12px;
-      border: 1px solid #ddd6fe; background: rgba(255,255,255,.85);
+      border: 1px solid rgba(14,94,123,.2); background: rgba(255,255,255,.9);
     }
-    input:focus, textarea:focus, select:focus { outline: 2px solid var(--ana); border-color: transparent; }
+    input:focus, textarea:focus, select:focus { outline: 2px solid var(--turuncu); border-color: transparent; }
     button {
-      font: inherit; font-weight: 600; cursor: pointer;
+      font-weight: 600; font-size: .95rem; cursor: pointer;
       padding: 12px 20px; border: 0; border-radius: 12px;
-      background: var(--ana); color: #fff; white-space: nowrap;
+      background: var(--turuncu); color: #fff; white-space: nowrap;
     }
-    button:hover { background: var(--ana-koyu); }
+    button:hover { background: #e0833a; }
     button:disabled { opacity: .6; cursor: wait; }
 
     /* Z-Pattern son çizgi: gözün indiği alt bölgede form */
-    .form-bolumu { padding: 0 0 64px; }
+    .form-bolumu { padding: 0 0 56px; }
     .form-bolumu .cam-kart { display: grid; grid-template-columns: 1fr 2fr; gap: 32px; align-items: center; padding: 32px; }
-    .form-bolumu h2 { margin: 0 0 8px; }
-    .form-bolumu p { margin: 0; color: var(--soluk); }
+    .form-bolumu h2 { margin: 0 0 8px; color: var(--mavi); }
+    .form-bolumu p { margin: 0; color: var(--soluk); line-height: 1.6; }
     .form-izgara { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .form-izgara .tam { grid-column: 1 / -1; }
+    .kvkk { font-size: .8rem; color: var(--soluk); margin-top: 8px; }
     #formSonuc { margin-top: 10px; font-weight: 500; min-height: 1.4em; }
-    #formSonuc.ok { color: #15803d; }
-    #formSonuc.err { color: #b91c1c; }
+    #formSonuc.ok { color: #1f7a4d; }
+    #formSonuc.err { color: #9b1c1c; }
 
-    footer { text-align: center; color: var(--soluk); padding: 24px 0 40px; font-size: .9rem; }
+    footer { background: var(--mavi); color: #e6f0f3; padding: 28px 0; font-size: .9rem; }
+    footer .kapsayici { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    footer a { color: var(--turuncu); text-decoration: none; }
 
     @media (max-width: 820px) {
       .hero, .form-bolumu .cam-kart { grid-template-columns: 1fr; }
       .form-izgara { grid-template-columns: 1fr; }
-      nav a { margin-left: 12px; }
+      nav a:not(.tel) { display: none; }
+      .logo img { height: 44px; }
+      nav .tel { padding: 8px 12px; font-size: .85rem; }
     }
   </style>
 </head>
 <body>
   <div class="kapsayici">
     <header>
-      <div class="logo" id="logo">{{ marka.split(' ')[0] }}<span>{{ ' ' ~ marka.split(' ')[1:]|join(' ') }}</span></div>
+      <a class="logo" href="/" aria-label="{{ marka }} ana sayfa">
+        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="{{ marka }}">
+      </a>
       <nav>
         <a href="#sohbet">Asistan</a>
-        <a href="#iletisim">İletişim</a>
-        <a href="/dashboard">Panel</a>
+        <a href="#iletisim">Teklif Al</a>
+        <a class="tel" href="tel:{{ telefon|replace(' ', '')|replace('(', '')|replace(')', '') }}">{{ telefon }}</a>
       </nav>
     </header>
 
     <section class="hero">
       <div>
+        <div class="ust-baslik">Butik seyahat &amp; organizasyon</div>
         <h1>{{ slogan }}</h1>
-        <p>Ne giyeceğine karar veremedin mi? Akıllı satış asistanımız sana stil önerisi sunar,
-          kargo, iade ve ödeme sorularını saniyeler içinde yanıtlar.</p>
+        <p>Kapadokya'dan Ege'ye, Karadeniz'den Güneydoğu'ya; kalabalık otobüsler yerine küçük gruplar,
+          aceleye getirilmiş programlar yerine size özel rotalar. Sorunuzu asistanımıza sorun,
+          planlamanın yükünü bize bırakın.</p>
         <div class="rozetler">
-          <span class="rozet">🚚 750 TL üzeri ücretsiz kargo</span>
-          <span class="rozet">↩️ 14 gün ücretsiz iade</span>
-          <span class="rozet">💳 6 taksit imkânı</span>
+          <span class="rozet">👥 En fazla 16 kişilik gruplar</span>
+          <span class="rozet">🧭 Kişiye özel rotalar</span>
+          <span class="rozet">💯 Gizli ücret yok</span>
+          <span class="rozet">📞 7/24 kişisel danışman</span>
         </div>
       </div>
 
       <div class="cam-kart" id="sohbet">
-        <div class="sohbet-baslik"><span class="nokta"></span> {{ marka }} Asistanı</div>
+        <div class="sohbet-baslik">
+          <img src="{{ url_for('static', filename='img/ikon.svg') }}" alt="">
+          <div>Sönmez Asistan<small><span aria-hidden="true">🟢</span> Çevrimiçi · genellikle anında yanıtlar</small></div>
+        </div>
         <div id="yanitAlani" aria-live="polite">
-          <div class="balon asistan">Merhaba! 👋 Size nasıl yardımcı olabilirim? Ürün önerisi, kargo veya iade hakkında sorabilirsiniz.</div>
+          <div class="balon asistan">Merhaba! 👋 Ben Sönmez Asistan. Kültür turları, kişiye özel tatil paketleri ya da şirketiniz için bir organizasyon mu planlıyorsunuz? Size nasıl yardımcı olabilirim?</div>
         </div>
         <form class="giris-satiri" id="sohbetFormu">
-          <input id="mesajGirisi" type="text" placeholder="Örn: Düğün için ne önerirsin?" maxlength="1000" autocomplete="off" required>
+          <input id="mesajGirisi" type="text" placeholder="Örn: Kapadokya turu kaç gün sürüyor?" maxlength="1000" autocomplete="off" required>
           <button id="sorButonu" type="submit">Sor</button>
         </form>
       </div>
@@ -137,30 +159,39 @@
     <section class="form-bolumu" id="iletisim">
       <div class="cam-kart">
         <div>
-          <h2>Size özel indirim 🎁</h2>
-          <p>Bilgilerinizi bırakın, stil danışmanımız sizi arasın ve ilk siparişinize özel %10 indirim tanımlasın.</p>
+          <h2>Ücretsiz seyahat planı alın ✈️</h2>
+          <p>Bilgilerinizi bırakın, kişisel seyahat danışmanımız 24 saat içinde sizi arasın ve size özel, şeffaf fiyatlı teklifinizi hazırlasın.</p>
         </div>
         <form id="leadFormu">
           <div class="form-izgara">
             <input id="isimGirisi" type="text" placeholder="Adınız Soyadınız" maxlength="100" required>
             <input id="telefonGirisi" type="tel" placeholder="05xx xxx xx xx" maxlength="20" required>
             <select id="ilgiGirisi" class="tam">
-              <option value="">İlgi alanınız (opsiyonel)</option>
-              <option>Kadın giyim</option>
-              <option>Erkek giyim</option>
-              <option>Ayakkabı</option>
-              <option>Aksesuar</option>
+              <option value="">İlgilendiğiniz hizmet (opsiyonel)</option>
+              <option>Kapadokya Turu</option>
+              <option>Ege Turu</option>
+              <option>Karadeniz Turu</option>
+              <option>Güneydoğu Turu</option>
+              <option>Kişiye Özel Tatil Paketi</option>
+              <option>Otel &amp; Transfer Rezervasyonu</option>
+              <option>Kurumsal Organizasyon</option>
             </select>
-            <textarea id="notGirisi" class="tam" rows="2" placeholder="Eklemek istediğiniz not (opsiyonel)" maxlength="500"></textarea>
+            <textarea id="notGirisi" class="tam" rows="2" placeholder="Tarih, kişi sayısı veya eklemek istediğiniz not (opsiyonel)" maxlength="500"></textarea>
             <button id="kaydetButonu" class="tam" type="submit">Kaydet</button>
           </div>
+          <div class="kvkk">Bilgileriniz 6698 sayılı KVKK kapsamında yalnızca sizinle iletişime geçmek amacıyla işlenir.</div>
           <div id="formSonuc" role="status"></div>
         </form>
       </div>
     </section>
   </div>
 
-  <footer>© {{ marka }} · SmartLead AI ile güçlendirilmiştir</footer>
+  <footer>
+    <div class="kapsayici">
+      <div>© {{ marka }} ve Organizasyon Ltd. Şti. · {{ adres }}</div>
+      <div><a href="mailto:{{ eposta }}">{{ eposta }}</a> · <a href="https://www.instagram.com/sonmezturizm" target="_blank" rel="noopener">@sonmezturizm</a></div>
+    </div>
+  </footer>
 
   <script>
     // Sohbet geçmişi: yapay zekânın bağlamı hatırlaması için backend'e gönderilir

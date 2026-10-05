@@ -4,25 +4,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ marka }} — Yönetim Paneli</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/ikon.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ana: #7c3aed;
-      --metin: #1f1235;
-      --soluk: #6b6280;
-      --cizgi: #ece8f5;
-      --zemin: #f7f5fb;
+      /* Sönmez Turizm marka renkleri */
+      --ana: #0E5E7B;
+      --turuncu: #F2994A;
+      --metin: #12313d;
+      --soluk: #5b6b71;
+      --cizgi: #e7dfd2;
+      --zemin: #F5EFE6;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--metin); background: var(--zemin); }
+    body { margin: 0; font-family: "Poppins", system-ui, sans-serif; color: var(--metin); background: var(--zemin); }
     .kapsayici { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
 
     /* F-Pattern: başlık ve özet üstte yatay, en önemli kolon (isim) solda */
-    header { display: flex; justify-content: space-between; align-items: center; padding: 24px 0 8px; }
-    header h1 { margin: 0; font-size: 1.5rem; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 24px 0 8px; flex-wrap: wrap; gap: 12px; }
+    header .marka { display: flex; align-items: center; gap: 16px; }
+    header img { height: 48px; }
+    header h1 { margin: 0; font-size: 1.3rem; color: var(--ana); }
     header a { color: var(--ana); text-decoration: none; font-weight: 600; }
     .ozet { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0 24px; }
-    .ozet-kart { background: #fff; border: 1px solid var(--cizgi); border-radius: 14px; padding: 16px 20px; min-width: 160px; }
-    .ozet-kart .deger { font-size: 1.8rem; font-weight: 800; }
+    .ozet-kart { background: #fff; border-top: 4px solid var(--turuncu); border: 1px solid var(--cizgi); border-radius: 14px; padding: 16px 20px; min-width: 160px; }
+    .ozet-kart .deger { font-size: 1.8rem; font-weight: 700; color: var(--ana); }
     .ozet-kart .etiket { color: var(--soluk); font-size: .9rem; }
 
     .arac-cubugu { display: flex; gap: 12px; margin-bottom: 12px; }
@@ -32,11 +40,11 @@
     .tablo-kutu { background: #fff; border: 1px solid var(--cizgi); border-radius: 14px; overflow-x: auto; margin-bottom: 40px; }
     table { width: 100%; border-collapse: collapse; }
     th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--cizgi); vertical-align: top; }
-    th { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--soluk); background: #fbfaff; }
-    td.isim { font-weight: 700; }
-    td.mesaj { color: var(--soluk); max-width: 340px; }
+    th { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: #fff; background: var(--ana); }
+    td.isim { font-weight: 600; color: var(--ana); }
+    td.mesaj { color: var(--soluk); max-width: 340px; font-family: "Lora", Georgia, serif; }
     td.tarih { white-space: nowrap; color: var(--soluk); font-size: .9rem; }
-    .etiket-ilgi { background: #ede9fe; color: #5b21b6; padding: 3px 10px; border-radius: 999px; font-size: .85rem; white-space: nowrap; }
+    .etiket-ilgi { background: #fdebd9; color: #9a5214; padding: 3px 10px; border-radius: 999px; font-size: .85rem; white-space: nowrap; }
     .bos { text-align: center; color: var(--soluk); padding: 40px; }
     tr:last-child td { border-bottom: 0; }
   </style>
@@ -44,7 +52,10 @@
 <body>
   <div class="kapsayici">
     <header>
-      <h1>{{ marka }} · Müşteri Adayları</h1>
+      <div class="marka">
+        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="{{ marka }}">
+        <h1>Müşteri Adayları</h1>
+      </div>
       <a href="/">← Siteye dön</a>
     </header>
 
@@ -61,7 +72,7 @@
     <div class="tablo-kutu">
       <table>
         <thead>
-          <tr><th>İsim</th><th>Telefon</th><th>İlgi alanı</th><th>Not</th><th>Tarih</th></tr>
+          <tr><th>İsim</th><th>Telefon</th><th>İlgilendiği hizmet</th><th>Not</th><th>Tarih</th></tr>
         </thead>
         <tbody id="leadTablosu">
           <tr><td colspan="5" class="bos">Yükleniyor…</td></tr>

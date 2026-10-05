@@ -78,9 +78,9 @@ class AIService:
         if not self.api_key:
             return (
                 f'Merhaba! Ben {self.brand_name} asistanıyım. Şu an demo modunda '
-                'çalışıyorum (yapay zekâ anahtarı tanımlı değil). Size özel öneriler '
-                've indirimler için aşağıdaki forma adınızı ve telefonunuzu '
-                'bırakabilirsiniz; ekibimiz en kısa sürede dönüş yapacak.'
+                'çalışıyorum (yapay zekâ anahtarı tanımlı değil). Hayalinizdeki seyahati '
+                'birlikte planlamak için aşağıdaki forma adınızı ve telefonunuzu '
+                'bırakabilirsiniz; seyahat danışmanımız 24 saat içinde sizi arayacak.'
             )
 
         mesajlar = self._mesajlari_hazirla(mesaj, gecmis)

@@ -1,4 +1,4 @@
-// Wix Velo — Yönetim Paneli (B2B) sayfa kodu
+// Wix Velo — Sönmez Turizm Yönetim Paneli (B2B) sayfa kodu
 // Gerekli bileşenler:
 //   #leadRepeater (Repeater) — içinde #isimMetni, #telefonMetni, #ilgiMetni, #tarihMetni (Text)
 //   #toplamMetni (Text), #yenileButonu (Button)

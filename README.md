@@ -1,9 +1,21 @@
-# Akıllı Satış Asistanı — SmartLead AI (Nova Butik)
+# Sönmez Turizm — Akıllı Satış Asistanı (SmartLead AI)
 
-Online butik **Nova Butik** için geliştirilmiş, web sitesi ziyaretçileriyle yapay zekâ üzerinden sohbet eden ve iletişim bilgilerini (lead) toplayan bir satış asistanı.
+**Marka yöneticisi:** Ozan Sönmez · **Web sitesi:** <https://sonmezturizm.wixsite.com/sonmezturizm>
 
-- **Karşılama sayfası (B2C):** Ziyaretçi asistana ürün, kargo, iade ve ödeme sorularını sorar; özel indirim için adını ve telefonunu bırakır.
-- **Yönetim paneli (B2B):** İşletme sahibi toplanan müşteri adaylarını en yeniden eskiye listeler ve arar.
+Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çalışan, ziyaretçilerle yapay zekâ üzerinden sohbet eden ("Sönmez Asistan") ve tur, tatil ya da kurumsal organizasyonla ilgilenenlerin iletişim bilgilerini (lead) toplayan bir satış asistanı.
+
+- **Karşılama sayfası (B2C):** Ziyaretçi Kapadokya, Ege, Karadeniz, Güneydoğu turları, kişiye özel tatil paketleri veya kurumsal organizasyonlar hakkında soru sorar; ücretsiz seyahat planı için adını, telefonunu ve ilgilendiği hizmeti bırakır.
+- **Yönetim paneli (B2B):** İşletme toplanan müşteri adaylarını en yeniden eskiye listeler ve arar.
+
+### Markaya özel kişiselleştirme
+
+| Ne | Nerede | Değer |
+|---|---|---|
+| Asistanın kişiliği | `config.py → BUSINESS_CONTEXT` | Samimi, güven veren, "gezmeyi seven bir dost" tonu; fiyat uydurmaz, forma yönlendirir |
+| Marka bilgileri | `config.py → BRAND_*` | Ad, slogan ("Seyahat bir yarış değil, bir deneyimdir."), telefon, e-posta, adres |
+| Ek veritabanı sütunu | `database.py → ilgi_alani` | Kapadokya Turu, Ege Turu, …, Kurumsal Organizasyon |
+| Görsel kimlik | `templates/*.html`, `static/img/` | Logo paketi, Deniz Mavisi `#0E5E7B`, Gün Batımı Turuncusu `#F2994A`, Kum Beji `#F5EFE6`, Poppins / Lora |
+| KVKK | Karşılama formu | 6698 sayılı KVKK aydınlatma notu |
 
 **Teknolojiler:** Python · Flask · SQLite · Groq (llama-3.1-8b-instant) · Wix Velo · Render
 
@@ -20,6 +32,7 @@ Online butik **Nova Butik** için geliştirilmiş, web sitesi ziyaretçileriyle 
 │   ├── __init__.py        ← Uygulama fabrikası (create_app) + /health
 │   ├── database.py        ← Veritabanı işlemleri (SQL SADECE burada)
 │   ├── routes.py          ← HTTP rotaları (sadece doğrulama ve yönlendirme)
+│   ├── static/img/        ← Sönmez Turizm logo ve ikonu (SVG)
 │   ├── templates/
 │   │   ├── index.html     ← Karşılama sayfası (Z-Pattern, Glassmorphism)
 │   │   └── dashboard.html ← Yönetim paneli (F-Pattern)
@@ -64,8 +77,8 @@ Durum kodları: eksik/geçersiz veri **400**, yapay zekâ hatası **503**, yeni 
 
 ```bash
 curl http://localhost:5000/health
-curl -X POST http://localhost:5000/api/sohbet -H "Content-Type: application/json" -d '{"mesaj":"Kargo ücreti ne kadar?"}'
-curl -X POST http://localhost:5000/api/leads -H "Content-Type: application/json" -d '{"isim":"Ayşe Yılmaz","telefon":"05551234567"}'
+curl -X POST http://localhost:5000/api/sohbet -H "Content-Type: application/json" -d '{"mesaj":"Kapadokya turu kaç gün sürüyor?"}'
+curl -X POST http://localhost:5000/api/leads -H "Content-Type: application/json" -d '{"isim":"Elif Kaya","telefon":"05321112233","ilgi_alani":"Kapadokya Turu"}'
 curl http://localhost:5000/api/leads
 ```
 
@@ -81,8 +94,10 @@ curl http://localhost:5000/api/leads
 
 1. Render'da **Web Service** oluşturup bu depoyu bağlayın.
 2. Build: `pip install -r requirements.txt` · Start: `gunicorn run:app`
-3. Ortam değişkenleri: `FLASK_ENV=production`, `SECRET_KEY`, `GROQ_API_KEY`, `CORS_ORIGINS=https://<wix-siteniz>`
-4. `wix/` altındaki dosyalardaki `API_URL` değerini Render adresinizle değiştirip Wix Velo sayfa kodlarına yapıştırın.
+3. Ortam değişkenleri: `FLASK_ENV=production`, `SECRET_KEY`, `GROQ_API_KEY`, `CORS_ORIGINS=https://sonmezturizm.wixsite.com`
+4. Wix Studio'da **Dev Mode**'u açın, bileşenlere `wix/*.js` dosyalarının başında yazan ID'leri verin, `API_URL` değerini Render adresinizle değiştirip kodları ilgili sayfaların Page Code alanına yapıştırın.
+   - Karşılama: Z-Pattern (logo sol üst, sohbet kartı sağda, form altta); sohbet kutusuna Glassmorphism (yarı saydam beyaz zemin + blur + ince beyaz kenarlık).
+   - Panel: Repeater (`#leadRepeater`), isim kolonu en solda (F-Pattern).
 5. Kontrol: `https://<render-adresiniz>/health` → `"durum": "aktif"`.
 
 > Not: Render'ın ücretsiz planında disk kalıcı değildir; SQLite verisi yeniden başlatmada sıfırlanabilir. Kalıcılık için Render Disk eklenip `DATABASE_URL` o diske yönlendirilebilir.

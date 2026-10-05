@@ -28,10 +28,14 @@ def _hata(mesaj, durum_kodu):
 @pages_bp.route('/')
 def index():
     """Karşılama sayfası (B2C)."""
+    ayar = current_app.config
     return render_template(
         'index.html',
-        marka=current_app.config['BRAND_NAME'],
-        slogan=current_app.config['BRAND_SLOGAN'],
+        marka=ayar['BRAND_NAME'],
+        slogan=ayar['BRAND_SLOGAN'],
+        telefon=ayar['BRAND_PHONE'],
+        eposta=ayar['BRAND_EMAIL'],
+        adres=ayar['BRAND_ADDRESS'],
     )
 
 
