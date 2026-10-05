@@ -2,11 +2,9 @@
 // Bileşen ID'leri: #mesajGirisi, #sorButonu, #yanitAlani, #isimGirisi, #telefonGirisi,
 // #ilgiSecimi, #notGirisi, #kaydetButonu, #formSonuc
 // Tasarım: Z-Pattern — başlık sol üst, sohbet kartı sağda (cam efekti), form alt bölgede.
+// API istekleri backend/sonmezApi.web.js içindeki wix-fetch fonksiyonlarıyla yapılır.
 
-import { fetch } from 'wix-fetch';
-
-// Render'daki backend adresi (sonunda / olmadan)
-const API_URL = 'https://sonmez-turizm.onrender.com';
+import { sohbetGonder, leadGonder } from 'backend/sonmezApi.web';
 
 // Yapay zekânın konuşmayı hatırlaması için geçmiş
 const gecmis = [];
@@ -55,12 +53,7 @@ async function soruGonder() {
     $w('#yanitAlani').text = 'Yazıyor…';
 
     try {
-        const yanit = await fetch(`${API_URL}/api/sohbet`, {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ mesaj: mesaj, gecmis: gecmis })   // alan adı: mesaj
-        });
-        const veri = await yanit.json();
+        const veri = await sohbetGonder(mesaj, gecmis);   // alan adı: mesaj
 
         if (veri.basari) {
             $w('#yanitAlani').text = veri.cevap;                        // alan adı: cevap
@@ -90,13 +83,8 @@ async function leadKaydet() {
 
     $w('#kaydetButonu').disable();
     try {
-        const yanit = await fetch(`${API_URL}/api/leads`, {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json' },
-            // alan adları backend ile birebir aynı: isim, telefon, ilgi_alani, mesaj
-            body: JSON.stringify({ isim: isim, telefon: telefon, ilgi_alani: ilgiAlani, mesaj: notMetni })
-        });
-        const veri = await yanit.json();
+        // alan adları backend ile birebir aynı: isim, telefon, ilgi_alani, mesaj
+        const veri = await leadGonder({ isim: isim, telefon: telefon, ilgi_alani: ilgiAlani, mesaj: notMetni });
 
         if (veri.basari) {
             $w('#formSonuc').text = veri.mesaj;

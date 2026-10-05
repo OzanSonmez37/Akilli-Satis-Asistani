@@ -40,8 +40,10 @@ Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çal�
 │       ├── __init__.py
 │       └── ai_service.py  ← Yapay zekâ çağrıları (SADECE burada)
 └── wix/
-    ├── karsilama_sayfasi.js ← Wix Velo: sohbet + lead formu
-    └── yonetim_paneli.js    ← Wix Velo: Repeater ile lead listesi
+    ├── backend/
+    │   └── sonmezApi.web.js ← Velo backend web modülü: wix-fetch ile Render API çağrıları
+    ├── karsilama_sayfasi.js ← Wix Velo sayfa kodu: sohbet + lead formu
+    └── yonetim_paneli.js    ← Wix Velo sayfa kodu: Repeater ile lead listesi
 ```
 
 **Mimari sözleşme:** `database.py` dışında SQL, `ai_service.py` dışında yapay zekâ çağrısı yoktur. `routes.py` yalnızca bu iki katmanın fonksiyonlarını çağırır. Projeyi başka bir işe uyarlamak için yalnızca `config.py` içindeki `BUSINESS_CONTEXT` / marka ayarları ve arayüz metinleri değişir.
@@ -81,6 +83,13 @@ curl -X POST http://localhost:5000/api/sohbet -H "Content-Type: application/json
 curl -X POST http://localhost:5000/api/leads -H "Content-Type: application/json" -d '{"isim":"Elif Kaya","telefon":"05321112233","ilgi_alani":"Kapadokya Turu"}'
 curl http://localhost:5000/api/leads
 ```
+
+## Wix Studio Bağlantısı
+
+- Site Wix Studio'da kurulu; sayfa kodları `wix/` klasöründekilerle aynıdır.
+- Render çağrıları tarayıcıdan değil, Velo **backend web modülünden** (`backend/sonmezApi.web.js`) `wix-fetch` ile yapılır. Böylece Wix önizleme/yayın adresleri ne olursa olsun CORS sorunu yaşanmaz; sayfa kodu yalnızca `sohbetGonder`, `leadGonder`, `leadleriGetir` fonksiyonlarını çağırır.
+- Karşılama sayfası ID'leri: `#mesajGirisi`, `#sorButonu`, `#yanitAlani`, `#isimGirisi`, `#telefonGirisi`, `#ilgiSecimi`, `#notGirisi`, `#kaydetButonu`, `#formSonuc`.
+- Panel sayfası ID'leri: `#leadRepeater` → `#isimMetni`, `#telefonMetni`, `#ilgiMetni`, `#tarihMetni`.
 
 ## Güvenlik
 

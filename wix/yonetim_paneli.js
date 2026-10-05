@@ -1,12 +1,9 @@
-// Wix Velo — Sönmez Turizm Yönetim Paneli (B2B) sayfa kodu
-// Gerekli bileşenler:
-//   #leadRepeater (Repeater) — içinde #isimMetni, #telefonMetni, #ilgiMetni, #tarihMetni (Text)
-//   #toplamMetni (Text), #yenileButonu (Button)
+// Wix Velo — Sönmez Turizm Yönetim Paneli (B2B)
+// Bileşenler: #leadRepeater (Repeater) — içinde #isimMetni, #telefonMetni, #ilgiMetni, #tarihMetni
 // Tasarım: F-Pattern — en önemli kolon (isim) en solda.
+// Veriler backend/sonmezApi.web.js içindeki leadleriGetir() ile GET /api/leads'ten alınır.
 
-import { fetch } from 'wix-fetch';
-
-const API_URL = 'https://sonmez-turizm.onrender.com';
+import { leadleriGetir } from 'backend/sonmezApi.web';
 
 $w.onReady(function () {
     // Repeater'daki her satır için $item ile o satırın bileşenlerine eriş
@@ -17,24 +14,18 @@ $w.onReady(function () {
         $item('#tarihMetni').text = lead.tarih;
     });
 
-    $w('#yenileButonu').onClick(leadleriGetir);
-    leadleriGetir();
+    kayitlariYukle();
 });
 
-async function leadleriGetir() {
-    try {
-        const yanit = await fetch(`${API_URL}/api/leads`, { method: 'get' });
-        const veri = await yanit.json();
+async function kayitlariYukle() {
+    const veri = await leadleriGetir();
 
-        if (!veri.basari) {
-            $w('#toplamMetni').text = veri.hata;
-            return;
-        }
-
-        // Repeater her objede benzersiz bir _id (metin) ister
-        $w('#leadRepeater').data = veri.leads.map((lead) => ({ ...lead, _id: String(lead.id) }));
-        $w('#toplamMetni').text = `Toplam ${veri.adet} müşteri adayı`;
-    } catch (hata) {
-        $w('#toplamMetni').text = 'Kayıtlar getirilemedi.';
+    if (!veri.basari) {
+        console.error('Kayıtlar getirilemedi:', veri.hata);
+        $w('#leadRepeater').data = [];
+        return;
     }
+
+    // Repeater her objede benzersiz bir _id (metin) ister
+    $w('#leadRepeater').data = veri.leads.map((lead) => ({ ...lead, _id: String(lead.id) }));
 }
