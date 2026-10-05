@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ marka }} — Yönetim Paneli</title>
+  <style>
+    :root {
+      --ana: #7c3aed;
+      --metin: #1f1235;
+      --soluk: #6b6280;
+      --cizgi: #ece8f5;
+      --zemin: #f7f5fb;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--metin); background: var(--zemin); }
+    .kapsayici { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+    /* F-Pattern: başlık ve özet üstte yatay, en önemli kolon (isim) solda */
+    header { display: flex; justify-content: space-between; align-items: center; padding: 24px 0 8px; }
+    header h1 { margin: 0; font-size: 1.5rem; }
+    header a { color: var(--ana); text-decoration: none; font-weight: 600; }
+    .ozet { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0 24px; }
+    .ozet-kart { background: #fff; border: 1px solid var(--cizgi); border-radius: 14px; padding: 16px 20px; min-width: 160px; }
+    .ozet-kart .deger { font-size: 1.8rem; font-weight: 800; }
+    .ozet-kart .etiket { color: var(--soluk); font-size: .9rem; }
+
+    .arac-cubugu { display: flex; gap: 12px; margin-bottom: 12px; }
+    .arac-cubugu input { flex: 1; font: inherit; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--cizgi); }
+    .arac-cubugu button { font: inherit; font-weight: 600; padding: 10px 16px; border: 0; border-radius: 10px; background: var(--ana); color: #fff; cursor: pointer; }
+
+    .tablo-kutu { background: #fff; border: 1px solid var(--cizgi); border-radius: 14px; overflow-x: auto; margin-bottom: 40px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--cizgi); vertical-align: top; }
+    th { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--soluk); background: #fbfaff; }
+    td.isim { font-weight: 700; }
+    td.mesaj { color: var(--soluk); max-width: 340px; }
+    td.tarih { white-space: nowrap; color: var(--soluk); font-size: .9rem; }
+    .etiket-ilgi { background: #ede9fe; color: #5b21b6; padding: 3px 10px; border-radius: 999px; font-size: .85rem; white-space: nowrap; }
+    .bos { text-align: center; color: var(--soluk); padding: 40px; }
+    tr:last-child td { border-bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="kapsayici">
+    <header>
+      <h1>{{ marka }} · Müşteri Adayları</h1>
+      <a href="/">← Siteye dön</a>
+    </header>
+
+    <div class="ozet">
+      <div class="ozet-kart"><div class="deger" id="toplamSayi">–</div><div class="etiket">Toplam lead</div></div>
+      <div class="ozet-kart"><div class="deger" id="bugunSayi">–</div><div class="etiket">Bugün gelen</div></div>
+    </div>
+
+    <div class="arac-cubugu">
+      <input id="aramaGirisi" type="search" placeholder="İsim veya telefonla ara…">
+      <button id="yenileButonu" type="button">Yenile</button>
+    </div>
+
+    <div class="tablo-kutu">
+      <table>
+        <thead>
+          <tr><th>İsim</th><th>Telefon</th><th>İlgi alanı</th><th>Not</th><th>Tarih</th></tr>
+        </thead>
+        <tbody id="leadTablosu">
+          <tr><td colspan="5" class="bos">Yükleniyor…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let leadler = [];
+    const tablo = document.getElementById('leadTablosu');
+
+    // SQLite tarihi UTC döner; yerel saate çevirip okunur biçimde göster
+    function tarihBicimle(metin) {
+      const tarih = new Date(metin.replace(' ', 'T') + 'Z');
+      return isNaN(tarih) ? metin : tarih.toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'short' });
+    }
+
+    function hucre(metin, sinif) {
+      const td = document.createElement('td');
+      if (sinif) td.className = sinif;
+      td.textContent = metin || '—';
+      return td;
+    }
+
+    function tabloyuCiz() {
+      const arama = document.getElementById('aramaGirisi').value.trim().toLowerCase();
+      const filtreli = leadler.filter(l =>
+        !arama || l.isim.toLowerCase().includes(arama) || l.telefon.includes(arama));
+
+      tablo.replaceChildren();
+      if (filtreli.length === 0) {
+        const tr = document.createElement('tr');
+        const td = hucre(leadler.length ? 'Aramaya uyan kayıt yok.' : 'Henüz kayıt yok.', 'bos');
+        td.colSpan = 5;
+        tr.appendChild(td);
+        tablo.appendChild(tr);
+        return;
+      }
+
+      for (const lead of filtreli) {
+        const tr = document.createElement('tr');
+        tr.appendChild(hucre(lead.isim, 'isim'));
+        tr.appendChild(hucre(lead.telefon));
+        const ilgi = document.createElement('td');
+        if (lead.ilgi_alani) {
+          const span = document.createElement('span');
+          span.className = 'etiket-ilgi';
+          span.textContent = lead.ilgi_alani;
+          ilgi.appendChild(span);
+        } else {
+          ilgi.textContent = '—';
+        }
+        tr.appendChild(ilgi);
+        tr.appendChild(hucre(lead.mesaj, 'mesaj'));
+        tr.appendChild(hucre(tarihBicimle(lead.tarih), 'tarih'));
+        tablo.appendChild(tr);
+      }
+    }
+
+    async function leadleriGetir() {
+      try {
+        const yanit = await fetch('/api/leads');
+        const veri = await yanit.json();
+        if (!veri.basari) throw new Error(veri.hata);
+        leadler = veri.leads;
+
+        const bugun = new Date().toDateString();
+        document.getElementById('toplamSayi').textContent = veri.adet;
+        document.getElementById('bugunSayi').textContent =
+          leadler.filter(l => new Date(l.tarih.replace(' ', 'T') + 'Z').toDateString() === bugun).length;
+        tabloyuCiz();
+      } catch (hata) {
+        tablo.innerHTML = '<tr><td colspan="5" class="bos">Kayıtlar getirilemedi.</td></tr>';
+      }
+    }
+
+    document.getElementById('aramaGirisi').addEventListener('input', tabloyuCiz);
+    document.getElementById('yenileButonu').addEventListener('click', leadleriGetir);
+    leadleriGetir();
+  </script>
+</body>
+</html>

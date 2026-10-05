@@ -1,0 +1,19 @@
+# Gizli anahtarlar — ASLA GitHub'a yüklenmez
+.env
+
+# Sanal ortam
+venv/
+.venv/
+
+# Python önbellekleri
+__pycache__/
+*.pyc
+
+# Yerel veritabanı
+*.db
+*.sqlite3
+
+# İşletim sistemi / editör
+.DS_Store
+.vscode/
+.idea/
