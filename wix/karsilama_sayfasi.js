@@ -1,23 +1,48 @@
 // Wix Velo — Sönmez Turizm Karşılama Sayfası (B2C) sayfa kodu
-// Gerekli bileşen ID'leri (Wix editöründe Properties panelinden verin):
-//   #mesajGirisi (Text Input), #sorButonu (Button), #yanitAlani (Text)
-//   #isimGirisi (Text Input), #telefonGirisi (Text Input), #kaydetButonu (Button), #formSonuc (Text)
-//   #ilgiSecimi (Dropdown — Kapadokya Turu, Ege Turu, ..., Kurumsal Organizasyon), #notGirisi (Text Box)
-// Marka: Deniz Mavisi #0E5E7B, Gün Batımı Turuncusu #F2994A, Kum Beji #F5EFE6 · Poppins / Lora
-// Tasarım: Z-Pattern — logo sol üst, sohbet kartı sağda (Glassmorphism), form alt bölgede.
+// Bileşen ID'leri: #mesajGirisi, #sorButonu, #yanitAlani, #isimGirisi, #telefonGirisi,
+// #ilgiSecimi, #notGirisi, #kaydetButonu, #formSonuc
+// Tasarım: Z-Pattern — başlık sol üst, sohbet kartı sağda (cam efekti), form alt bölgede.
 
 import { fetch } from 'wix-fetch';
 
-// Render'daki backend adresiniz (sonunda / olmadan)
+// Render'daki backend adresi (sonunda / olmadan)
 const API_URL = 'https://sonmez-turizm.onrender.com';
 
 // Yapay zekânın konuşmayı hatırlaması için geçmiş
 const gecmis = [];
 
+const HIZMETLER = [
+    'Kapadokya Turu', 'Ege Turu', 'Karadeniz Turu', 'Güneydoğu Turu',
+    'Kişiye Özel Tatil Paketi', 'Otel & Transfer Rezervasyonu', 'Kurumsal Organizasyon'
+];
+
 $w.onReady(function () {
+    sayfayiHazirla();
     $w('#sorButonu').onClick(soruGonder);
     $w('#kaydetButonu').onClick(leadKaydet);
 });
+
+// Bileşenlerin başlangıç metinlerini, etiketlerini ve seçeneklerini ayarlar
+function sayfayiHazirla() {
+    $w('#yanitAlani').text = 'Merhaba! Ben Sönmez Asistan. Kültür turları, kişiye özel tatil paketleri ya da kurumsal organizasyonlar hakkında sorunuzu yazın.';
+    $w('#mesajGirisi').inputType = 'text';
+    $w('#mesajGirisi').label = 'Sönmez Asistan\'a sorun';
+    $w('#mesajGirisi').placeholder = 'Örn: Kapadokya turu kaç gün sürüyor?';
+    $w('#sorButonu').label = 'Sor';
+
+    $w('#isimGirisi').label = 'Ad Soyad';
+    $w('#isimGirisi').placeholder = 'Adınız Soyadınız';
+    $w('#telefonGirisi').inputType = 'tel';
+    $w('#telefonGirisi').label = 'Telefon';
+    $w('#telefonGirisi').placeholder = '05xx xxx xx xx';
+    $w('#ilgiSecimi').label = 'İlgilendiğiniz hizmet';
+    $w('#ilgiSecimi').placeholder = 'Seçiniz (opsiyonel)';
+    $w('#ilgiSecimi').options = HIZMETLER.map((h) => ({ label: h, value: h }));
+    $w('#notGirisi').label = 'Not';
+    $w('#notGirisi').placeholder = 'Tarih, kişi sayısı veya eklemek istediğiniz not (opsiyonel)';
+    $w('#kaydetButonu').label = 'Kaydet';
+    $w('#formSonuc').text = 'Ücretsiz seyahat planı için bilgilerinizi bırakın. Bilgileriniz KVKK kapsamında yalnızca sizinle iletişim için kullanılır.';
+}
 
 async function soruGonder() {
     const mesaj = $w('#mesajGirisi').value.trim();

@@ -1,6 +1,6 @@
 # Sönmez Turizm — Akıllı Satış Asistanı (SmartLead AI)
 
-**Marka yöneticisi:** Ozan Sönmez · **Web sitesi:** <https://sonmezturizm.wixsite.com/sonmezturizm> · **Canlı backend:** <https://sonmez-turizm.onrender.com>
+**Marka yöneticisi:** Ozan Sönmez · **Web sitesi (Wix Studio):** <https://ozansonmez2004.wixstudio.com/my-site-1> · **Canlı backend:** <https://sonmez-turizm.onrender.com>
 
 Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çalışan, ziyaretçilerle yapay zekâ üzerinden sohbet eden ("Sönmez Asistan") ve tur, tatil ya da kurumsal organizasyonla ilgilenenlerin iletişim bilgilerini (lead) toplayan bir satış asistanı.
 
@@ -94,7 +94,7 @@ curl http://localhost:5000/api/leads
 
 1. Render'da **Web Service** oluşturup bu depoyu bağlayın.
 2. Build: `pip install -r requirements.txt` · Start: `gunicorn run:app`
-3. Ortam değişkenleri: `FLASK_ENV=production`, `SECRET_KEY`, `GROQ_API_KEY`, `CORS_ORIGINS=https://sonmezturizm.wixsite.com`
+3. Ortam değişkenleri: `FLASK_ENV=production`, `SECRET_KEY`, `GROQ_API_KEY`, `CORS_ORIGINS=https://ozansonmez2004.wixstudio.com,https://.*\.editor\.wix\.com$,https://.*\.filesusr\.com$` (canlı Wix Studio sitesi + Wix önizlemesi; `*` içeren değerler regex olarak eşleşir)
 4. Wix Studio'da **Dev Mode**'u açın, bileşenlere `wix/*.js` dosyalarının başında yazan ID'leri verin, `API_URL` değerini Render adresinizle değiştirip kodları ilgili sayfaların Page Code alanına yapıştırın.
    - Karşılama: Z-Pattern (logo sol üst, sohbet kartı sağda, form altta); sohbet kutusuna Glassmorphism (yarı saydam beyaz zemin + blur + ince beyaz kenarlık).
    - Panel: Repeater (`#leadRepeater`), isim kolonu en solda (F-Pattern).
