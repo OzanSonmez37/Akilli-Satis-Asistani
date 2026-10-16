@@ -26,10 +26,8 @@ $w.onReady(function () {
         '<h4 class="font_4"><span style="font-size:22px;letter-spacing:1px;color:' + MAVI + '">SÖNMEZ</span>' +
         '<span style="font-size:12px;letter-spacing:6px;color:' + TURUNCU + '">  TURİZM</span></h4>';
 
-    // Footer (mavi bant): şirket ve iletişim bilgileri (KVKK politikasındaki veri sorumlusu bilgileri)
+    // Footer (mavi bant): şirket unvanı
     $w('#text2').html =
         '<p class="font_8" style="text-align:center"><span style="color:#E6F0F3;font-size:14px">' +
-        '© Sönmez Turizm ve Organizasyon Ltd. Şti. · Atatürk Caddesi No: 42/3, 34710 Kadıköy / İstanbul</span></p>' +
-        '<p class="font_8" style="text-align:center"><span style="color:' + TURUNCU + ';font-size:14px">' +
-        '+90 (216) 555 42 42 · info@sonmezturizm.com.tr · @sonmezturizm</span></p>';
+        '© Sönmez Turizm ve Organizasyon Ltd. Şti.</span></p>';
 });
