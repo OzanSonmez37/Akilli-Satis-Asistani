@@ -42,6 +42,7 @@ Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çal�
 └── wix/
     ├── backend/
     │   └── sonmezApi.web.js ← Velo backend web modülü: wix-fetch ile Render API çağrıları
+    ├── masterPage.js        ← Wix Velo: tüm sayfalarda ortak header (logo) ve footer
     ├── karsilama_sayfasi.js ← Wix Velo sayfa kodu: sohbet + lead formu
     └── yonetim_paneli.js    ← Wix Velo sayfa kodu: Repeater ile lead listesi
 ```
@@ -89,7 +90,8 @@ curl http://localhost:5000/api/leads
 - Site Wix Studio'da kurulu; sayfa kodları `wix/` klasöründekilerle aynıdır.
 - Render çağrıları tarayıcıdan değil, Velo **backend web modülünden** (`backend/sonmezApi.web.js`) `wix-fetch` ile yapılır. Böylece Wix önizleme/yayın adresleri ne olursa olsun CORS sorunu yaşanmaz; sayfa kodu yalnızca `sohbetGonder`, `leadGonder`, `leadleriGetir` fonksiyonlarını çağırır.
 - Karşılama sayfası ID'leri: `#mesajGirisi`, `#sorButonu`, `#yanitAlani`, `#isimGirisi`, `#telefonGirisi`, `#ilgiSecimi`, `#notGirisi`, `#kaydetButonu`, `#formSonuc`.
-- Panel sayfası ID'leri: `#leadRepeater` → `#isimMetni`, `#telefonMetni`, `#ilgiMetni`, `#tarihMetni`.
+- Panel sayfası ID'leri: `#panelBaslik`, `#leadRepeater` → `#isimMetni`, `#telefonMetni`, `#ilgiMetni`, `#tarihMetni`.
+- Görünüm Render'daki sayfalarla aynı marka dilini kullanır: Site Stilleri'nde arka plan `#F5EFE6`, metin `#0E5E7B`, vurgu `#F2994A`, başlıklar Poppins (Kalın), gövde IBM Plex Serif (Wix'te Lora bulunmadığı için en yakın serif). Turuncu yuvarlak butonlar, yuvarlak giriş alanları, cam efektli sohbet kartı, hero rozetleri ve satır kartları Velo kodundaki `style` / `html` ile verilir.
 
 ## Güvenlik
 
