@@ -1,7 +1,8 @@
 // Wix Velo — Sönmez Turizm Karşılama Sayfası (B2C)
-// Bileşen ID'leri: #text4 (başlık), #box2 (sohbet kartı), #mesajGirisi, #sorButonu, #yanitAlani,
+// Bileşen ID'leri: #text4 (başlık), #sohbetAcButonu (sağ altta sabit buton), #box2 (sohbet kartı,
+// sayfa açılışında gizli; butona tıklanınca açılır), #mesajGirisi, #sorButonu, #yanitAlani,
 // #isimGirisi, #telefonGirisi, #ilgiSecimi, #notGirisi, #kaydetButonu, #formSonuc
-// Tasarım: Z-Pattern — başlık sol üst, sohbet kartı sağda (cam efekti), form alt bölgede.
+// Tasarım: Z-Pattern — başlık sol üst, sohbet sağ altta açılır pencere (cam efekti), form alt bölgede.
 // Görünüm Render'daki index.html ile aynı marka dilini kullanır (renkler, yuvarlak köşeler, rozetler).
 // API istekleri backend/sonmezApi.web.js içindeki wix-fetch fonksiyonlarıyla yapılır.
 
@@ -24,9 +25,22 @@ const HIZMETLER = [
 $w.onReady(function () {
     sayfayiHazirla();
     stilleriUygula();
+    $w('#sohbetAcButonu').onClick(sohbetiAcKapat);
     $w('#sorButonu').onClick(soruGonder);
     $w('#kaydetButonu').onClick(leadKaydet);
 });
+
+// Sağ alttaki butonla sohbet penceresini aç/kapat
+async function sohbetiAcKapat() {
+    if ($w('#box2').hidden) {
+        await $w('#box2').show('fade', { duration: 200 });
+        $w('#sohbetAcButonu').label = '✕ Kapat';
+        $w('#mesajGirisi').focus();
+    } else {
+        await $w('#box2').hide('fade', { duration: 200 });
+        $w('#sohbetAcButonu').label = '💬 Sönmez Asistan';
+    }
+}
 
 // Kullanıcıdan/yapay zekâdan gelen metni HTML'e güvenle yerleştirmek için kaçış
 function guvenli(metin) {
@@ -78,6 +92,7 @@ function sayfayiHazirla() {
     $w('#mesajGirisi').label = '';
     $w('#mesajGirisi').placeholder = 'Örn: Kapadokya turu kaç gün sürüyor?';
     $w('#sorButonu').label = 'Sor';
+    $w('#sohbetAcButonu').label = '💬 Sönmez Asistan';
 
     formMesaji('Bilgilerinizi bırakın, danışmanımız 24 saat içinde sizi arasın. Bilgileriniz KVKK kapsamında yalnızca iletişim için kullanılır.');
     $w('#isimGirisi').label = 'Ad Soyad';
@@ -100,6 +115,13 @@ function stilleriUygula() {
         borderColor: 'rgba(255,255,255,0.8)',
         borderWidth: '1px',
         borderRadius: '24px'
+    });
+
+    stil('#sohbetAcButonu', {
+        backgroundColor: MAVI,
+        color: '#FFFFFF',
+        borderWidth: '0px',
+        borderRadius: '999px'
     });
 
     ['#sorButonu', '#kaydetButonu'].forEach((id) => stil(id, {

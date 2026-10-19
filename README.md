@@ -1,6 +1,6 @@
 # Sönmez Turizm — Akıllı Satış Asistanı (SmartLead AI)
 
-**Marka yöneticisi:** Ozan Sönmez · **Canlı backend:** <https://sonmez-turizm.onrender.com> · **Web sitesi (Wix Studio):** <https://ozansonmez2004.wixstudio.com/sonmezturizm> · **Yönetim paneli (Wix):** <https://ozansonmez2004.wixstudio.com/sonmezturizm/blank> · 
+**Marka yöneticisi:** Ozan Sönmez · **Canlı backend:** <https://sonmez-turizm.onrender.com> · **Web sitesi (Wix Studio):** <https://ozansonmez2004.wixstudio.com/sonmezturizm> · **Admin girişi (Wix):** <https://ozansonmez2004.wixstudio.com/sonmezturizm/admin-giris> · **Yönetim paneli (Wix):** <https://ozansonmez2004.wixstudio.com/sonmezturizm/admin-panel> · 
 
 Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çalışan, ziyaretçilerle yapay zekâ üzerinden sohbet eden ("Sönmez Asistan") ve tur, tatil ya da kurumsal organizasyonla ilgilenenlerin iletişim bilgilerini (lead) toplayan bir satış asistanı.
 
@@ -43,8 +43,9 @@ Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çal�
     ├── backend/
     │   └── sonmezApi.web.js ← Velo backend web modülü: wix-fetch ile Render API çağrıları
     ├── masterPage.js        ← Wix Velo: tüm sayfalarda ortak header (logo) ve footer
-    ├── karsilama_sayfasi.js ← Wix Velo sayfa kodu: sohbet + lead formu
-    └── yonetim_paneli.js    ← Wix Velo sayfa kodu: Repeater ile lead listesi
+    ├── karsilama_sayfasi.js ← Wix Velo sayfa kodu: butonla açılan sohbet + lead formu
+    ├── admin_giris.js       ← Wix Velo sayfa kodu: admin e-posta/şifre girişi
+    └── yonetim_paneli.js    ← Wix Velo sayfa kodu: Repeater ile lead listesi (yalnızca girişten sonra)
 ```
 
 **Mimari sözleşme:** `database.py` dışında SQL, `ai_service.py` dışında yapay zekâ çağrısı yoktur. `routes.py` yalnızca bu iki katmanın fonksiyonlarını çağırır. Projeyi başka bir işe uyarlamak için yalnızca `config.py` içindeki `BUSINESS_CONTEXT` / marka ayarları ve arayüz metinleri değişir.
@@ -88,9 +89,11 @@ curl http://localhost:5000/api/leads
 ## Wix Studio Bağlantısı
 
 - Site Wix Studio'da kurulu; sayfa kodları `wix/` klasöründekilerle aynıdır.
-- Render çağrıları tarayıcıdan değil, Velo **backend web modülünden** (`backend/sonmezApi.web.js`) `wix-fetch` ile yapılır. Böylece Wix önizleme/yayın adresleri ne olursa olsun CORS sorunu yaşanmaz; sayfa kodu yalnızca `sohbetGonder`, `leadGonder`, `leadleriGetir` fonksiyonlarını çağırır.
-- Karşılama sayfası ID'leri: `#mesajGirisi`, `#sorButonu`, `#yanitAlani`, `#isimGirisi`, `#telefonGirisi`, `#ilgiSecimi`, `#notGirisi`, `#kaydetButonu`, `#formSonuc`.
-- Panel sayfası ID'leri: `#panelBaslik`, `#leadRepeater` → `#isimMetni`, `#telefonMetni`, `#ilgiMetni`, `#tarihMetni`.
+- Render çağrıları tarayıcıdan değil, Velo **backend web modülünden** (`backend/sonmezApi.web.js`) `wix-fetch` ile yapılır. Böylece Wix önizleme/yayın adresleri ne olursa olsun CORS sorunu yaşanmaz; sayfa kodu yalnızca `adminGiris`, `sohbetGonder`, `leadGonder`, `leadleriGetir` fonksiyonlarını çağırır.
+- Karşılama sayfası ID'leri: `#sohbetAcButonu` (sağ altta sabit), `#box2` (sohbet kartı, sağ altta sabit, açılışta gizli), `#mesajGirisi`, `#sorButonu`, `#yanitAlani`, `#isimGirisi`, `#telefonGirisi`, `#ilgiSecimi`, `#notGirisi`, `#kaydetButonu`, `#formSonuc`.
+- Admin Girişi sayfası (`/admin-giris`) ID'leri: `#girisBaslik`, `#epostaGirisi`, `#sifreGirisi`, `#girisButonu`, `#girisMesaji`.
+- Panel sayfası (`/admin-panel`) ID'leri: `#panelBaslik`, `#leadRepeater` (açılışta gizli) → `#isimMetni`, `#telefonMetni`, `#ilgiMetni`, `#tarihMetni`.
+- Admin hesabı koda yazılmaz: Wix **Secrets Manager**'a `ADMIN_EPOSTA` ve `ADMIN_SIFRE` eklenir. Başarılı girişte backend 8 saat geçerli, HMAC imzalı bir oturum anahtarı döner; panel bu anahtar olmadan giriş sayfasına yönlendirir.
 - Görünüm Render'daki sayfalarla aynı marka dilini kullanır: Site Stilleri'nde arka plan `#F5EFE6`, metin `#0E5E7B`, vurgu `#F2994A`, başlıklar Poppins (Kalın), gövde IBM Plex Serif (Wix'te Lora bulunmadığı için en yakın serif). Turuncu yuvarlak butonlar, yuvarlak giriş alanları, cam efektli sohbet kartı, hero rozetleri ve satır kartları Velo kodundaki `style` / `html` ile verilir.
 
 ## Güvenlik

@@ -1,14 +1,18 @@
 // Wix Velo — Sönmez Turizm Yönetim Paneli (B2B)
-// Bileşenler: #panelBaslik (başlık + özet), #leadRepeater (Repeater) — her satırda #box2 (satır kartı),
-// #isimMetni, #telefonMetni, #ilgiMetni, #tarihMetni
+// Bileşenler: #panelBaslik (başlık + özet), #leadRepeater (Repeater, sayfa açılışında gizli) —
+// her satırda #box2 (satır kartı), #isimMetni, #telefonMetni, #ilgiMetni, #tarihMetni
 // Tasarım: F-Pattern — en önemli kolon (isim) en solda. Görünüm Render'daki dashboard.html ile aynı.
-// Veriler backend/sonmezApi.web.js içindeki leadleriGetir() ile GET /api/leads'ten alınır.
+// Erişim: yalnızca Admin Girişi'nden alınan oturumla; veriler backend/sonmezApi.web.js
+// içindeki leadleriGetir() ile GET /api/leads'ten alınır.
 
 import { leadleriGetir } from 'backend/sonmezApi.web';
+import { session } from 'wix-storage-frontend';
+import wixLocation from 'wix-location-frontend';
 
 const MAVI = '#0E5E7B';
 const TURUNCU = '#F2994A';
 const SOLUK = '#5B6B71';
+const GIRIS_ADRESI = '/admin-giris';
 
 function guvenli(metin) {
     return String(metin == null ? '' : metin)
@@ -26,17 +30,24 @@ function bugunMu(metin) {
     return !isNaN(tarih) && tarih.toDateString() === new Date().toDateString();
 }
 
-function baslikGoster(toplam, bugun, hata) {
-    const ozet = hata
-        ? '<span style="color:#9B1C1C">' + guvenli(hata) + '</span>'
-        : '<span style="color:' + MAVI + ';font-weight:bold">' + toplam + '</span> toplam lead   ·   ' +
-          '<span style="color:' + TURUNCU + ';font-weight:bold">' + bugun + '</span> bugün gelen';
+function baslikGoster(ozetHtml) {
     $w('#panelBaslik').html =
         '<h2 class="font_2"><span style="font-size:36px">Müşteri Adayları</span></h2>' +
-        '<p class="font_8"><span style="color:' + SOLUK + ';font-size:16px">' + ozet + '</span></p>';
+        '<p class="font_8"><span style="color:' + SOLUK + ';font-size:16px">' + ozetHtml + '</span></p>';
+}
+
+function girisSayfasinaDon() {
+    session.removeItem('adminOturum');
+    wixLocation.to(GIRIS_ADRESI);
 }
 
 $w.onReady(function () {
+    const oturum = session.getItem('adminOturum');
+    if (!oturum) {
+        girisSayfasinaDon();
+        return;
+    }
+
     // Repeater'daki her satır için $item ile o satırın bileşenlerine eriş
     $w('#leadRepeater').onItemReady(($item, lead) => {
         try {
@@ -56,21 +67,34 @@ $w.onReady(function () {
         $item('#tarihMetni').html = '<p class="font_8"><span style="color:' + SOLUK + ';font-size:14px">' + guvenli(tarihBicimle(lead.tarih)) + '</span></p>';
     });
 
-    baslikGoster('–', '–');
-    kayitlariYukle();
+    baslikGoster('Kayıtlar yükleniyor…');
+    kayitlariYukle(oturum);
 });
 
-async function kayitlariYukle() {
-    const veri = await leadleriGetir();
+async function kayitlariYukle(oturum) {
+    const veri = await leadleriGetir(oturum);
 
+    if (veri.yetkisiz) {
+        girisSayfasinaDon();
+        return;
+    }
     if (!veri.basari) {
         console.error('Kayıtlar getirilemedi:', veri.hata);
-        baslikGoster(0, 0, 'Kayıtlar getirilemedi: ' + veri.hata);
-        $w('#leadRepeater').data = [];
+        baslikGoster('<span style="color:#9B1C1C">Kayıtlar getirilemedi: ' + guvenli(veri.hata) + '</span>');
         return;
     }
 
-    baslikGoster(veri.adet, veri.leads.filter((l) => bugunMu(l.tarih)).length);
+    if (veri.adet === 0) {
+        baslikGoster('Henüz kayıt yok. Siteden gelen ilk müşteri adayı burada görünecek.');
+        return;
+    }
+
+    const bugun = veri.leads.filter((l) => bugunMu(l.tarih)).length;
+    baslikGoster(
+        '<span style="color:' + MAVI + ';font-weight:bold">' + veri.adet + '</span> toplam lead   ·   ' +
+        '<span style="color:' + TURUNCU + ';font-weight:bold">' + bugun + '</span> bugün gelen'
+    );
     // Repeater her objede benzersiz bir _id (metin) ister
     $w('#leadRepeater').data = veri.leads.map((lead) => ({ ...lead, _id: String(lead.id) }));
+    $w('#leadRepeater').show();
 }
