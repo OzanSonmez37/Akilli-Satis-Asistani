@@ -42,6 +42,7 @@ Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çal�
 └── wix/
     ├── backend/
     │   └── sonmezApi.web.js ← Velo backend web modülü: wix-fetch ile Render API çağrıları
+    ├── global.css           ← Wix Studio site geneli CSS: menü linkleri hap buton görünümü
     ├── masterPage.js        ← Wix Velo: tüm sayfalarda ortak header (logo) ve footer
     ├── karsilama_sayfasi.js ← Wix Velo sayfa kodu: butonla açılan sohbet + lead formu
     ├── admin_giris.js       ← Wix Velo sayfa kodu: admin e-posta/şifre girişi
