@@ -42,23 +42,28 @@ def init_db(app):
                 telefon     TEXT NOT NULL,
                 mesaj       TEXT,
                 ilgi_alani  TEXT,
+                plan        TEXT,
                 tarih       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
             """
         )
+        # Eski veritabanlarında 'plan' sütunu yoksa ekle (rota planlayıcı için)
+        sutunlar = [satir['name'] for satir in db.execute('PRAGMA table_info(leads)')]
+        if 'plan' not in sutunlar:
+            db.execute('ALTER TABLE leads ADD COLUMN plan TEXT')
         db.commit()
     except sqlite3.Error as hata:
         raise DatabaseError(f'Tablo oluşturulamadı: {hata}') from hata
 
 
-def lead_ekle(isim, telefon, mesaj=None, ilgi_alani=None):
+def lead_ekle(isim, telefon, mesaj=None, ilgi_alani=None, plan=None):
     """Yeni bir müşteri adayı kaydeder ve oluşan kaydın id'sini döndürür."""
     try:
         db = get_db()
         # ? yer tutucuları SQL Injection'a karşı zorunlu korumadır
         imlec = db.execute(
-            'INSERT INTO leads (isim, telefon, mesaj, ilgi_alani) VALUES (?, ?, ?, ?)',
-            (isim, telefon, mesaj, ilgi_alani),
+            'INSERT INTO leads (isim, telefon, mesaj, ilgi_alani, plan) VALUES (?, ?, ?, ?, ?)',
+            (isim, telefon, mesaj, ilgi_alani, plan),
         )
         db.commit()
         return imlec.lastrowid
@@ -70,7 +75,7 @@ def tum_leadler():
     """Tüm kayıtları en yeniden eskiye doğru sözlük listesi olarak döndürür."""
     try:
         satirlar = get_db().execute(
-            'SELECT id, isim, telefon, mesaj, ilgi_alani, tarih '
+            'SELECT id, isim, telefon, mesaj, ilgi_alani, plan, tarih '
             'FROM leads ORDER BY tarih DESC, id DESC'
         ).fetchall()
     except sqlite3.Error as hata:

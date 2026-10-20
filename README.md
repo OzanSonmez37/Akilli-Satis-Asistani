@@ -13,7 +13,8 @@ Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çal�
 |---|---|---|
 | Asistanın kişiliği | `config.py → BUSINESS_CONTEXT` | Samimi, güven veren, "gezmeyi seven bir dost" tonu; fiyat uydurmaz, forma yönlendirir |
 | Marka bilgileri | `config.py → BRAND_*` | Ad, slogan ("Seyahat bir yarış değil, bir deneyimdir."), telefon, e-posta, adres |
-| Ek veritabanı sütunu | `database.py → ilgi_alani` | Kapadokya Turu, Ege Turu, …, Kurumsal Organizasyon |
+| Ek veritabanı sütunları | `database.py → ilgi_alani, plan` | Kapadokya Turu, …, Kurumsal Organizasyon · rota planlayıcıdan gönderilen plan |
+| Kişiye Özel Rota Planlayıcı | `ai_service.py → rota_plani_uret` + `config.py → ROTA_FIYATLARI` | Yapay zekâ gün gün programı yazar; maliyeti örnek fiyat tablosundan kod hesaplar (yapay zekâ fiyat üretmez) |
 | Görsel kimlik | Wix Studio editörü (site tasarımı) | Logo paketi, Deniz Mavisi `#0E5E7B`, Gün Batımı Turuncusu `#F2994A`, Kum Beji `#F5EFE6`, Poppins / Lora |
 | KVKK | Karşılama formu | 6698 sayılı KVKK aydınlatma notu |
 
@@ -62,7 +63,8 @@ Tarayıcıda <http://localhost:5000> API bilgisini, <http://localhost:5000/healt
 | GET   | `/`            | API bilgisi                   | JSON |
 | GET   | `/health`      | Canlılık kontrolü             | `{"basari": true, "durum": "aktif"}` |
 | POST  | `/api/sohbet`  | Yapay zekâya mesaj iletir     | `{"mesaj": "...", "gecmis": []}` → `{"basari": true, "cevap": "..."}` |
-| POST  | `/api/leads`   | Yeni lead kaydeder (201)      | `{"isim": "...", "telefon": "...", "mesaj"?, "ilgi_alani"?}` |
+| POST  | `/api/rota`    | Kişiye özel rota + tahmini maliyet | `{"bolge", "gun": 2-7, "kisi": 1-16, "ilgi": [], "tempo", "butce"}` → `{"gunler": [...], "maliyet": {...}}` |
+| POST  | `/api/leads`   | Yeni lead kaydeder (201)      | `{"isim": "...", "telefon": "...", "mesaj"?, "ilgi_alani"?, "plan"?}` |
 | GET   | `/api/leads`   | Tüm lead'leri getirir         | `{"basari": true, "adet": n, "leads": [...]}` |
 
 Durum kodları: eksik/geçersiz veri **400**, yapay zekâ hatası **503**, yeni kayıt **201**. Tüm API yanıtlarında `basari` alanı bulunur.

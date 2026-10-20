@@ -66,9 +66,31 @@ Kuralların:
    değiştiğini, danışmanımızın gizli ücret içermeyen kişiye özel teklif hazırlayacağını söyle.
 3. Müşterinin ne istediğini anlamak için soru sor: rota, tarih, kişi sayısı, bireysel mi kurumsal mı.
 4. Uygun anda müşteriyi sayfadaki forma adını ve telefonunu bırakmaya yönlendir;
-   seyahat danışmanımızın 24 saat içinde kendisini arayacağını söyle.
+   seyahat danışmanımızın 24 saat içinde kendisini arayacağını söyle. Fiyat merak eden müşteriye
+   sayfadaki "Kişiye Özel Rota Planlayıcı"yı öner: birkaç seçimle gün gün program ve tahmini maliyet çıkarır.
 5. Turizm ve seyahat dışındaki konularda kibarca yalnızca Sönmez Turizm hizmetleri hakkında
    yardımcı olabileceğini belirt.""")
+
+
+    # Rota planlayıcı: tahmini maliyet tablosu (TL). Rakamlar ÖRNEKTİR, işletme kendi fiyatlarıyla günceller.
+    # Hesabı kod yapar; yapay zekâ yalnızca gün gün programı yazar ve fiyat üretmez.
+    ROTA_BOLGELERI = ['Kapadokya', 'Ege', 'Karadeniz', 'Güneydoğu']
+    ROTA_ILGI_ALANLARI = ['Tarih', 'Gastronomi', 'Doğa', 'Fotoğraf']
+    ROTA_TEMPOLARI = ['Sakin', 'Dolu']
+    ROTA_FIYATLARI = {
+        # Bütçe seviyesi → kişi başı birim fiyatlar
+        'butce': {
+            'Ekonomik': {'konaklama_gece': 1500, 'aktivite_gun': 500, 'rehber_gun_grup': 4000},
+            'Standart': {'konaklama_gece': 3000, 'aktivite_gun': 900, 'rehber_gun_grup': 5500},
+            'Premium': {'konaklama_gece': 6000, 'aktivite_gun': 1500, 'rehber_gun_grup': 8000},
+        },
+        # Bölgeye göre kişi başı transfer (karşılama + tur içi ulaşım)
+        'transfer_kisi': {'Kapadokya': 1200, 'Ege': 1000, 'Karadeniz': 1400, 'Güneydoğu': 1500},
+        # Dolu tempoda aktivite giderinin çarpanı
+        'dolu_tempo_carpani': 1.3,
+        # Bölgeye özel isteğe bağlı deneyim (kişi başı)
+        'ozel_deneyim': {'Kapadokya': ('Gün doğumunda balon turu (isteğe bağlı)', 4500)},
+    }
 
 
 class DevelopmentConfig(Config):
