@@ -4,12 +4,13 @@ routes.py — Modül D: HTTP rotaları (kontrolcü katmanı).
 Burada SQL veya yapay zekâ kodu YOKTUR. Rotalar yalnızca isteği karşılar,
 doğrular ve ilgili katmanın fonksiyonunu çağırır.
 """
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, jsonify, render_template, request
 
 from app import database
 from app.services.ai_service import AIServiceError, ai_service
 
-# Arayüz Wix Studio'dadır; bu sunucu yalnızca JSON API sunar
+# Sayfalar ve API için iki ayrı Blueprint
+pages_bp = Blueprint('pages', __name__)
 api_bp = Blueprint('api', __name__)
 
 MAKS_MESAJ_UZUNLUGU = 1000
@@ -18,6 +19,30 @@ MAKS_MESAJ_UZUNLUGU = 1000
 def _hata(mesaj, durum_kodu):
     """Tüm API hatalarını aynı biçimde döndürmek için yardımcı fonksiyon."""
     return jsonify({'basari': False, 'hata': mesaj}), durum_kodu
+
+
+# ---------------------------------------------------------------------------
+# Sayfa rotaları
+# ---------------------------------------------------------------------------
+
+@pages_bp.route('/')
+def index():
+    """Karşılama sayfası (B2C)."""
+    ayar = current_app.config
+    return render_template(
+        'index.html',
+        marka=ayar['BRAND_NAME'],
+        slogan=ayar['BRAND_SLOGAN'],
+        telefon=ayar['BRAND_PHONE'],
+        eposta=ayar['BRAND_EMAIL'],
+        adres=ayar['BRAND_ADDRESS'],
+    )
+
+
+@pages_bp.route('/dashboard')
+def dashboard():
+    """Yönetim paneli (B2B)."""
+    return render_template('dashboard.html', marka=current_app.config['BRAND_NAME'])
 
 
 # ---------------------------------------------------------------------------

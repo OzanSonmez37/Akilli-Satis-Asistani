@@ -1,8 +1,7 @@
 """
 app/__init__.py — Modül E: Uygulama fabrikası.
 
-Sırasıyla: ayarları yükle → CORS aç → veritabanını hazırla → API blueprint'ini kaydet.
-Arayüz (frontend) tamamen Wix Studio'dadır; bu uygulama yalnızca JSON API sunar.
+Sırasıyla: ayarları yükle → CORS aç → veritabanını hazırla → blueprint'leri kaydet.
 """
 import os
 
@@ -29,18 +28,9 @@ def create_app(config_name=None):
         init_db(app)
 
     # 4) Rotaları kaydet
-    from app.routes import api_bp
+    from app.routes import api_bp, pages_bp
+    app.register_blueprint(pages_bp)
     app.register_blueprint(api_bp, url_prefix='/api')
-
-    @app.route('/')
-    def kok():
-        """Arayüz Wix Studio'dadır; kök adres yalnızca API bilgisini döndürür."""
-        return jsonify({
-            'basari': True,
-            'servis': app.config['BRAND_NAME'] + ' API',
-            'arayuz': 'https://ozansonmez2004.wixstudio.com/sonmezturizm',
-            'uclar': ['GET /health', 'POST /api/sohbet', 'POST /api/leads', 'GET /api/leads'],
-        })
 
     @app.route('/health')
     def health():

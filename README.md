@@ -29,21 +29,19 @@ Butik seyahat ve organizasyon markası **Sönmez Turizm**'in web sitesinde çal�
 ├── .env.example           ← .env için örnek (gerçek .env Git'e eklenmez)
 ├── .gitignore
 ├── app/
-│   ├── __init__.py        ← Uygulama fabrikası (create_app) + / ve /health (yalnızca JSON API)
+│   ├── __init__.py        ← Uygulama fabrikası (create_app) + /health
 │   ├── database.py        ← Veritabanı işlemleri (SQL SADECE burada)
 │   ├── routes.py          ← HTTP rotaları (sadece doğrulama ve yönlendirme)
+│   ├── templates/
+│   │   ├── index.html     ← Karşılama sayfası (Z-Pattern, Glassmorphism)
+│   │   └── dashboard.html ← Yönetim paneli (F-Pattern)
+│   ├── static/img/        ← Logo ve ikon (şablonlarda kullanılır)
 │   └── services/
 │       ├── __init__.py
 │       └── ai_service.py  ← Yapay zekâ çağrıları (SADECE burada)
-└── wix/
-    ├── backend/
-    │   └── sonmezApi.web.js ← Velo backend web modülü: wix-fetch ile Render API çağrıları
-    ├── karsilama_sayfasi.js ← Wix Velo sayfa kodu: butonla açılan sohbet + lead formu
-    ├── admin_giris.js       ← Wix Velo sayfa kodu: admin e-posta/şifre girişi
-    └── yonetim_paneli.js    ← Wix Velo sayfa kodu: Repeater ile lead listesi (yalnızca girişten sonra)
 ```
 
-**Ön yüz:** Tasarımın tamamı (metinler, renkler, butonlar, form alanları, menü, logo) Wix Studio editöründe sürükle-bırak ile yapılmıştır. `wix/` altındaki Velo kodu yalnızca etkileşim ve backend bağlantısını yönetir; Flask tarafında HTML arayüz yoktur.
+**Ön yüz:** Canlı müşteri arayüzü Wix Studio editöründe tasarlanmıştır ve bu API'ye bağlanır. Flask'taki `templates/` sayfaları aynı API'yi kullanan yerel/yedek arayüzdür.
 
 **Mimari sözleşme:** `database.py` dışında SQL, `ai_service.py` dışında yapay zekâ çağrısı yoktur. `routes.py` yalnızca bu iki katmanın fonksiyonlarını çağırır. Projeyi başka bir işe uyarlamak için yalnızca `config.py` içindeki `BUSINESS_CONTEXT` / marka ayarları ve arayüz metinleri değişir.
 
@@ -57,7 +55,7 @@ cp .env.example .env              # ardından GROQ_API_KEY değerini girin
 python run.py
 ```
 
-Tarayıcıda <http://localhost:5000> API bilgisini, <http://localhost:5000/health> durumu döndürür. Arayüz Wix Studio sitesindedir.
+Tarayıcıda: <http://localhost:5000> (karşılama) ve <http://localhost:5000/dashboard> (panel).
 
 > `GROQ_API_KEY` boşsa uygulama çökmez; asistan **demo modunda** sabit bir yanıt döner.
 
@@ -65,7 +63,8 @@ Tarayıcıda <http://localhost:5000> API bilgisini, <http://localhost:5000/healt
 
 | Metod | Yol            | Görev                         | Gövde / Yanıt |
 |-------|----------------|-------------------------------|---------------|
-| GET   | `/`            | API bilgisi                   | JSON |
+| GET   | `/`            | Karşılama sayfası             | HTML |
+| GET   | `/dashboard`   | Yönetim paneli                | HTML |
 | GET   | `/health`      | Canlılık kontrolü             | `{"basari": true, "durum": "aktif"}` |
 | POST  | `/api/sohbet`  | Yapay zekâya mesaj iletir     | `{"mesaj": "...", "gecmis": []}` → `{"basari": true, "cevap": "..."}` |
 | POST  | `/api/leads`   | Yeni lead kaydeder (201)      | `{"isim": "...", "telefon": "...", "mesaj"?, "ilgi_alani"?}` |
