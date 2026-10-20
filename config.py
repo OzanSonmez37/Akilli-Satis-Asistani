@@ -33,13 +33,13 @@ class Config:
     # Arayüzde görünen marka bilgileri (konuya özel tek yer burası + BUSINESS_CONTEXT)
     BRAND_NAME = os.environ.get('BRAND_NAME', 'Sönmez Turizm')
     BRAND_SLOGAN = os.environ.get('BRAND_SLOGAN', 'Seyahat bir yarış değil, bir deneyimdir.')
-    BRAND_PHONE = os.environ.get('BRAND_PHONE', '+90 (216) 555 42 42')
-    BRAND_EMAIL = os.environ.get('BRAND_EMAIL', 'info@sonmezturizm.com.tr')
-    BRAND_ADDRESS = os.environ.get('BRAND_ADDRESS', 'Atatürk Caddesi No: 42/3, 34710 Kadıköy / İstanbul')
+    BRAND_PHONE = os.environ.get('BRAND_PHONE', '+90 (533) 036 04 49')
+    BRAND_EMAIL = os.environ.get('BRAND_EMAIL', 'ozansonmez373@gmail.com')
+    BRAND_ADDRESS = os.environ.get('BRAND_ADDRESS', 'Beylikdüzü / İstanbul')
 
     # Yapay zekânın kişiliği — işletmeye göre değişen TEK metin
     BUSINESS_CONTEXT = os.environ.get('BUSINESS_CONTEXT', """Sen Sönmez Turizm'in "Sönmez Asistan" adlı akıllı satış asistanısın.
-Sönmez Turizm, İstanbul Kadıköy merkezli, butik bir seyahat ve organizasyon markasıdır.
+Sönmez Turizm, İstanbul Beylikdüzü merkezli, butik bir seyahat ve organizasyon markasıdır.
 Mottomuz: "Seyahat bir yarış değil, bir deneyimdir."
 
 Hizmetlerimiz:
@@ -56,8 +56,8 @@ Farkımız:
 - Seyahat boyunca 7/24 ulaşılabilen kişisel seyahat danışmanı.
 - Kurumsal müşterilere tek elden yönetim, raporlama ve kurumsal fatura.
 
-İletişim: +90 (216) 555 42 42 · info@sonmezturizm.com.tr ·
-Atatürk Caddesi No: 42/3, Kadıköy / İstanbul (ofiste yüz yüze danışmanlık), WhatsApp destek hattı.
+İletişim: +90 (533) 036 04 49 · ozansonmez373@gmail.com ·
+Beylikdüzü / İstanbul (ofiste yüz yüze danışmanlık), WhatsApp destek hattı.
 
 Kuralların:
 1. Her zaman Türkçe konuş. Bir tur şirketi gibi değil, gezmeyi çok seven ve her detayı bilen
