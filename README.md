@@ -83,7 +83,7 @@ curl http://localhost:5000/api/leads
 
 ## Wix Studio Bağlantısı
 
-- Site Wix Studio'da kurulu; sayfa kodları `wix/` klasöründekilerle aynıdır.
+- Site Wix Studio'da kurulu; Velo sayfa kodları Wix'in kendi kod editöründe tutulur.
 - Render çağrıları tarayıcıdan değil, Velo **backend web modülünden** (`backend/sonmezApi.web.js`) `wix-fetch` ile yapılır. Böylece Wix önizleme/yayın adresleri ne olursa olsun CORS sorunu yaşanmaz; sayfa kodu yalnızca `adminGiris`, `sohbetGonder`, `leadGonder`, `leadleriGetir` fonksiyonlarını çağırır.
 - Karşılama sayfası ID'leri: `#sohbetAcButonu` (sağ altta sabit), `#box2` (sohbet kartı, sağ altta sabit, açılışta gizli), `#mesajGirisi`, `#sorButonu`, `#yanitAlani`, `#isimGirisi`, `#telefonGirisi`, `#ilgiSecimi`, `#notGirisi`, `#kaydetButonu`, `#formSonuc`.
 - Admin Girişi sayfası (`/admin-giris`) ID'leri: `#girisBaslik`, `#epostaGirisi`, `#sifreGirisi`, `#girisButonu`, `#girisMesaji`.
@@ -104,7 +104,7 @@ curl http://localhost:5000/api/leads
 1. Render'da **Web Service** oluşturup bu depoyu bağlayın.
 2. Build: `pip install -r requirements.txt` · Start: `gunicorn run:app`
 3. Ortam değişkenleri: `FLASK_ENV=production`, `SECRET_KEY`, `GROQ_API_KEY`, `CORS_ORIGINS=https://ozansonmez2004.wixstudio.com,https://.*\.editor\.wix\.com$,https://.*\.filesusr\.com$` (canlı Wix Studio sitesi + Wix önizlemesi; `*` içeren değerler regex olarak eşleşir)
-4. Wix Studio'da **Dev Mode**'u açın, bileşenlere `wix/*.js` dosyalarının başında yazan ID'leri verin, `API_URL` değerini Render adresinizle değiştirip kodları ilgili sayfaların Page Code alanına yapıştırın.
+4. Wix Studio'da **Dev Mode**'u açın, backend web modülündeki `API_URL` değerini Render adresinizle değiştirin.
    - Karşılama: Z-Pattern (logo sol üst, sohbet kartı sağda, form altta); sohbet kutusuna Glassmorphism (yarı saydam beyaz zemin + blur + ince beyaz kenarlık).
    - Panel: Repeater (`#leadRepeater`), isim kolonu en solda (F-Pattern).
 5. Kontrol: `https://<render-adresiniz>/health` → `"durum": "aktif"`.
