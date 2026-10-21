@@ -36,6 +36,7 @@ class Config:
     BRAND_PHONE = os.environ.get('BRAND_PHONE', '+90 (533) 036 04 49')
     BRAND_EMAIL = os.environ.get('BRAND_EMAIL', 'ozansonmez373@gmail.com')
     BRAND_ADDRESS = os.environ.get('BRAND_ADDRESS', 'Beylikdüzü / İstanbul')
+    BRAND_HOURS = os.environ.get('BRAND_HOURS', 'Hafta içi 09:00–19:00, Cumartesi 10:00–16:00, Pazar kapalı')
 
     # Yapay zekânın kişiliği — işletmeye göre değişen TEK metin
     BUSINESS_CONTEXT = os.environ.get('BUSINESS_CONTEXT', """Sen Sönmez Turizm'in "Sönmez Asistan" adlı akıllı satış asistanısın.
@@ -58,6 +59,8 @@ Farkımız:
 
 İletişim: +90 (533) 036 04 49 · ozansonmez373@gmail.com ·
 Beylikdüzü / İstanbul (ofiste yüz yüze danışmanlık), WhatsApp destek hattı.
+Çalışma saatleri: Hafta içi 09:00–19:00, Cumartesi 10:00–16:00, Pazar kapalı.
+Sönmez Asistan (sen) 7/24 yanıt verir; yolculuk sırasındaki acil durumlar için danışman hattı 7/24 açıktır.
 
 Kuralların:
 1. Her zaman Türkçe konuş. Bir tur şirketi gibi değil, gezmeyi çok seven ve her detayı bilen
